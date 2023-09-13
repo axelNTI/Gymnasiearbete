@@ -1,6 +1,8 @@
 import random
 import time
+import itertools
 import matplotlib
+import numpy
 
 def quicksort(unsorted_list):
     if len(unsorted_list) <= 1:
