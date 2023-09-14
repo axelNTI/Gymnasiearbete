@@ -2,8 +2,8 @@ import random
 import time
 import itertools
 import matplotlib
-import numpy
-import threading  # Kolla hur man väljer att köra på performance-cores
+import numpy  # https://math.stackexchange.com/questions/1568900/generating-random-numbers-of-bell-curve-distribution
+import threading  # Kolla hur man väljer att köra på performance-cores && Multiprocessing vs Multithreding
 
 
 def quicksort(unsorted_list):
