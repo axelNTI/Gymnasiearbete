@@ -1,15 +1,15 @@
-import random
-import time
-import itertools
-import matplotlib
-import numpy  # https://math.stackexchange.com/questions/1568900/generating-random-numbers-of-bell-curve-distribution
-import threading  # Kolla hur man väljer att köra på performance-cores && Multiprocessing vs Multithreding
+import random as rand
+import time as t
+import itertools as it
+import matplotlib as mpl
+import numpy as num  # https://math.stackexchange.com/questions/1568900/generating-random-numbers-of-bell-curve-distribution
+import multiprocessing as mp
 
 
 def quicksort(unsorted_list):
     if len(unsorted_list) <= 1:
         return unsorted_list
-    randomItem = random.choice(unsorted_list)
+    randomItem = rand.choice(unsorted_list)
     return (
         quicksort([i for i in unsorted_list if i < randomItem])
         + [i for i in unsorted_list if i == randomItem]
@@ -17,13 +17,29 @@ def quicksort(unsorted_list):
     )
 
 
-time_list = []
+def sorting():
+    time_list = []
+    num_of_cycles = 10
+    for i in range(num_of_cycles):
+        print(f"{i/num_of_cycles * 100}%")
+        random_list = [rand.randint(0, 100000) for i in range(1000000)]
+        start_time = t.time()
+        quicksort(random_list)
+        time_list.append(t.time() - start_time)
 
-for i in range(10):
-    random_list = [random.randint(0, 100000) for i in range(1000000)]
-    start_time = time.time()
-    quicksort(random_list)
-    print(end_time := time.time() - start_time)
-    time_list.append(end_time)
+    print(f"Average: {sum(time_list) / len(time_list)}")
 
-print(sum(time_list) / len(time_list))
+
+def f(l, i):
+    l.acquire()
+    try:
+        sorting()
+    finally:
+        l.release()
+
+
+if __name__ == "__main__":
+    lock = mp.Lock()
+
+    for num in range(10):
+        mp.Process(target=f, args=(lock, num)).start()
