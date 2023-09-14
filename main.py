@@ -3,6 +3,8 @@ import time
 import itertools
 import matplotlib
 import numpy
+import threading  # Kolla hur man väljer att köra på performance-cores
+
 
 def quicksort(unsorted_list):
     if len(unsorted_list) <= 1:
