@@ -4,6 +4,7 @@ import itertools as it
 import matplotlib as mpl
 import numpy as num  # https://math.stackexchange.com/questions/1568900/generating-random-numbers-of-bell-curve-distribution
 import multiprocessing as mp
+# https://pythonspeed.com/articles/faster-multiprocessing-pickle/#:~:text=The%20multiprocessing%20module%20is%20built,benefits%20of%20using%20worker%20processes.
 
 
 def quicksort(unsorted_list):
@@ -26,20 +27,13 @@ def sorting():
         start_time = t.time()
         quicksort(random_list)
         time_list.append(t.time() - start_time)
+    return time_list
 
-    print(f"Average: {sum(time_list) / len(time_list)}")
-
-
-def f(l, i):
-    l.acquire()
-    try:
-        sorting()
-    finally:
-        l.release()
+    
 
 
 if __name__ == "__main__":
-    lock = mp.Lock()
-
-    for num in range(10):
-        mp.Process(target=f, args=(lock, num)).start()
+    time_list = []
+    for num in range(mp.cpu_count()):
+        time_list.append(mp.Process(target=sorting).start())
+    print(f"Average: {sum(time_list) / len(time_list)}")
