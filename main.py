@@ -1,4 +1,4 @@
-import matplotlib
+import matplotlib.pyplot as mplp
 import itertools
 import random
 import numpy
@@ -6,8 +6,6 @@ import time
 import os
 
 random.seed(os.urandom(256))
-
-
 
 
 def quicksort(unsorted_list):
@@ -33,4 +31,9 @@ def sorting():
         time_list.append(time.time() - start_time)
     print(sum(time_list) / len(time_list))
 
-sorting()
+size = 1000000
+bins = size / 100
+random_list = [random.gauss(0, 10) for i in range(size)]
+mplp.hist(random_list, bins=bins)
+mplp.show()
+# sorting()
