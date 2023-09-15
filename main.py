@@ -24,9 +24,10 @@ def quicksort(unsorted_list):
 def sorting():
     time_list = []
     num_of_cycles = 10
+    size = 1000000
     for i in range(num_of_cycles):
         print(f"{i/num_of_cycles * 100}%")
-        random_list = [random.randint(0, 100000) for i in range(1000000)]
+        random_list = [random.gauss(size / 2, size / 10) for i in range(size)]
         start_time = time.time()
         quicksort(random_list)
         time_list.append(time.time() - start_time)
