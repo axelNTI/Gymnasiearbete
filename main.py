@@ -25,15 +25,19 @@ def sorting():
     size = 1000000
     for i in range(num_of_cycles):
         print(f"{i/num_of_cycles * 100}%")
-        random_list = [random.gauss(size / 2, size / 10) for i in range(size)]
+        random_list = [int(round(random.gauss(0, 3), 0)) for i in range(10)]
         start_time = time.time()
         quicksort(random_list)
         time_list.append(time.time() - start_time)
     print(sum(time_list) / len(time_list))
 
-size = 1000000
-bins = size / 100
-random_list = [random.gauss(0, 10) for i in range(size)]
-mplp.hist(random_list, bins=bins)
-mplp.show()
+random_list = [int(round(random.gauss(0, 3), 0)) for i in range(10)]
+print(random_list)
+
+
+# size = 1000000
+# bins = size / 100
+# random_list = [random.gauss(0, 10) for i in range(size)]
+# mplp.hist(random_list, bins=bins)
+# mplp.show()
 # sorting()
