@@ -8,19 +8,12 @@ import random
 import numpy
 import time
 import os
+from algorithms import *
 
 random.seed(os.urandom(256))
 
 
-def quicksort(unsorted_list):
-    if len(unsorted_list) <= 1:
-        return unsorted_list
-    randomItem = random.choice(unsorted_list)
-    return (
-        quicksort([i for i in unsorted_list if i < randomItem])
-        + [i for i in unsorted_list if i == randomItem]
-        + quicksort([i for i in unsorted_list if i < randomItem])
-    )
+
 
 
 random_list = [int(round(random.gauss(0, 3), 0)) for i in range(10)]
