@@ -45,7 +45,7 @@ def quicksort2(unsorted_list) -> list:
 
 
 def quicksort3(unsorted_list) -> list:
-    if len(unsorted_list):
+    if len(unsorted_list) <= 1:
         return unsorted_list
     randomItem = random.choice(unsorted_list)
     less, equal, greater = [], [], []
@@ -58,6 +58,24 @@ def quicksort3(unsorted_list) -> list:
         for i in unsorted_list
     ]
     return quicksort3(less) + equal + quicksort3(greater)
+
+
+def quicksort4(unsorted_list) -> list:
+    try:
+        unsorted_list[1]
+    except:
+        return unsorted_list
+    randomItem = random.choice(unsorted_list)
+    less, equal, greater = [], [], []
+    [
+        less.append(i)
+        if i < randomItem
+        else equal.append(i)
+        if i == randomItem
+        else greater.append(i)
+        for i in unsorted_list
+    ]
+    return quicksort4(less) + equal + quicksort4(greater)
 
 
 def mergesort(unsorted_list) -> list:
@@ -75,6 +93,7 @@ def mergesort(unsorted_list) -> list:
 quick1 = []
 quick2 = []
 quick3 = []
+quick4 = []
 python = []
 for i in range(1000):
     print(i)
@@ -89,10 +108,14 @@ for i in range(1000):
     quicksort3(to_be_sorted)
     quick3.append(time.time() - start)
     start = time.time()
+    quicksort4(to_be_sorted)
+    quick4.append(time.time() - start)
+    start = time.time()
     to_be_sorted.sort()
     python.append(time.time() - start)
 
 print(f"Quick1: {1000*sum(quick1) / len(quick1)}")
 print(f"Quick2: {1000*sum(quick2) / len(quick2)}")
 print(f"Quick3: {1000*sum(quick3) / len(quick3)}")
+print(f"Quick4: {1000*sum(quick4) / len(quick4)}")
 print(f"Python: {1000*sum(python) / len(python)}")
