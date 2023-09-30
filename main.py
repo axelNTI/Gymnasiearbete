@@ -13,30 +13,27 @@ from algorithms import *
 random.seed(os.urandom(256))
 
 
-
-
-
-random_list = [int(round(random.gauss(0, 3), 0)) for i in range(10)]
+random_list = [int(round(random.gauss(0, 100), 0)) for i in range(10000)]
 
 
 def func():
     cpu_list = []
-    for i in range(10):
-        start = time.time()
+    for i in range(1000):
+        start = time.perf_counter_ns()
         quicksort(random_list)
-        cpu_list.append(time.time() - start)
-    print(f"CPU: {sum(cpu_list) / len(cpu_list)}")
+        cpu_list.append(time.perf_counter_ns() - start)
+    print(f"CPU: {sum(cpu_list) / (1000000*len(cpu_list))}")
 
 
 # function optimized to run on gpu
 @jit(target_backend="cuda")
 def func2():
     gpu_list = []
-    for i in range(10):
-        start = time.time()
+    for i in range(1000):
+        start = time.perf_counter_ns()
         quicksort(random_list)
-        gpu_list.append(time.time() - start)
-    print(f"GPU: {sum(gpu_list) / len(gpu_list)}")
+        gpu_list.append(time.perf_counter_ns() - start)
+    print(f"GPU: {sum(gpu_list) / (1000000*len(gpu_list))}")
 
 
 # print(timeit.timeit('quicksort(random_list)', number=100))
@@ -57,7 +54,7 @@ if __name__ == "__main__":
 #         random_list = [int(round(random.gauss(0, 3), 0)) for i in range(10)]
 #         start_time = timeit.timeit()
 #         quicksort(random_list)
-#         time_list.append(time.time() - start_time)
+#         time_list.append(time.time_perf_counter_ns() - start_time)
 #     print(sum(time_list) / len(time_list))
 
 # random_list = [int(round(random.gauss(0, 3), 0)) for i in range(10)]
