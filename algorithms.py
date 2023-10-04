@@ -24,10 +24,11 @@ def mergesort(unsorted_list) -> list:
     left = mergesort(unsorted_list[: len(unsorted_list) // 2])
     right = mergesort(unsorted_list[len(unsorted_list) // 2 :])
     result = []
-    while len(left) and len(right):
-        # left_index = 0
-        # right_index = 0
-        # if left
+    left_index = 0
+    right_index = 0
+    while len(left) > left_index and len(right) > right_index:
+        if left[0] <= right[0]:
+            pass
         result.append((left if left[0] <= right[0] else right).pop(0))
     [result.append(i) for i in left + right]
     return result
