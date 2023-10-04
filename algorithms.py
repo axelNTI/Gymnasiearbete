@@ -27,24 +27,30 @@ def mergesort(unsorted_list) -> list:
     left_index = 0
     right_index = 0
     while len(left) > left_index and len(right) > right_index:
-        if left[0] <= right[0]:
-            pass
-        result.append((left if left[0] <= right[0] else right).pop(0))
+        if left[left_index] <= right[right_index]:
+            result.append(left[left_index])
+            left_index += 1
+        else:
+            result.append(right[right_index])
+            right_index += 1
     [result.append(i) for i in left + right]
     return result
 
 
-# quicksort_list = []
-# mergesort_list = []
+quicksort_list = []
+mergesort_list = []
+to_be_sorted = [int(round(random.gauss(0, 100), 0)) for i in range(10)]
+print(mergesort(to_be_sorted))
+
 
 # for i in range(1000):
 #     print(i)
-#     to_be_sorted = [int(round(random.gauss(0, 100), 0)) for i in range(10000)]
-#     print('Quicksort')
+#     to_be_sorted = [int(round(random.gauss(0, 100), 0)) for i in range(100)]
+#     print("Quicksort")
 #     start = time.perf_counter_ns()
 #     quicksort(to_be_sorted)
 #     quicksort_list.append(time.perf_counter_ns() - start)
-#     print('Mergesort')
+#     print("Mergesort")
 #     start = time.perf_counter_ns()
 #     mergesort(to_be_sorted)
 #     mergesort_list.append(time.perf_counter_ns() - start)
