@@ -33,7 +33,7 @@ def func2():
     # print(f"GPU: {sum(gpu_list) / (1000000*len(gpu_list))}")
 
 
-​
+
 # Create the data array - usually initialized some other way
 data = numpy.ones(256)
 
