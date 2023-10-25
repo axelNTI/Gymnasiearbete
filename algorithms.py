@@ -5,7 +5,6 @@ import time
 def quicksort(unsorted_list) -> list:
     if len(unsorted_list) < 2:
         return unsorted_list
-
     mid = len(unsorted_list) // 2
     if unsorted_list[0] > unsorted_list[mid]:
         unsorted_list[0], unsorted_list[mid] = unsorted_list[mid], unsorted_list[0]
@@ -14,27 +13,68 @@ def quicksort(unsorted_list) -> list:
     if unsorted_list[mid] > unsorted_list[-1]:
         unsorted_list[mid], unsorted_list[-1] = unsorted_list[-1], unsorted_list[mid]
     pivot = unsorted_list[mid]
-    left, equal, right = [], [], []
+    less, equal, greater = [], [], []
     for i in unsorted_list:
         if i < pivot:
-            left.append(i)
+            less.append(i)
         elif i == pivot:
             equal.append(i)
-        elif i > pivot:
-            right.append(i)
-    return quicksort(left) + equal + quicksort(right)
+        else:
+            greater.append(i)
+    return quicksort(less) + equal + quicksort(greater)
 
 
 def quicksort2(unsorted_list) -> list:
     if len(unsorted_list) < 2:
         return unsorted_list
-    randomItem = unsorted_list[0]
-    less, equal, greater = [], [], []
-    [
-        [equal, greater, less][numpy.sign(i - randomItem)].append(i)
-        for i in unsorted_list
-    ]
-    return quicksort2(less) + equal + quicksort2(greater)
+    one_third = len(unsorted_list) // 3
+    two_thirds = int(len(unsorted_list) // 1.5)
+    if len(unsorted_list) > 6:
+        (
+            unsorted_list[0],
+            unsorted_list[one_third],
+            unsorted_list[two_thirds],
+            unsorted_list[-1],
+        ) = quicksort2(
+            (
+                unsorted_list[0],
+                unsorted_list[one_third],
+                unsorted_list[two_thirds],
+                unsorted_list[-1],
+            )
+        )
+    elif unsorted_list[one_third] > unsorted_list[two_thirds]:
+        try:
+            unsorted_list[one_third], unsorted_list[two_thirds] = unsorted_list[two_thirds], unsorted_list[one_third]
+    
+        except:
+            print(unsorted_list)
+            print(one_third)
+            print(two_thirds)   
+            exit()
+
+    first = unsorted_list[one_third]
+    second = unsorted_list[two_thirds]
+    less, first_equal, between, second_equal, greater = [], [], [], [], []
+    for i in unsorted_list:
+        if i < first:
+            less.append(i)
+        elif i == first:
+            first_equal.append(i)
+        elif i > first and i < second:
+            between.append(i)
+        elif i == second:
+            second_equal.append(i)
+        else:
+            greater.append(i)
+
+    return (
+        quicksort2(less)
+        + first_equal
+        + quicksort2(between)
+        + second_equal
+        + quicksort2(greater)
+    )
 
 
 def mergesort(unsorted_list) -> list:
@@ -127,9 +167,9 @@ for i in range(1000):
     quicksort(to_be_sorted)
     quicksort_list.append(time.perf_counter_ns() - quick_start)
 
-    # quick_start2 = time.perf_counter_ns()
-    # quicksort2(to_be_sorted)
-    # quicksort2_list.append(time.perf_counter_ns() - quick_start2)
+    quick_start2 = time.perf_counter_ns()
+    quicksort2(to_be_sorted)
+    quicksort2_list.append(time.perf_counter_ns() - quick_start2)
 
     # merge_start = time.perf_counter_ns()
     # mergesort(to_be_sorted)
@@ -177,7 +217,7 @@ for i in range(1000):
 
 
 print(f"Quicksort: {sum(quicksort_list) / (1000000*len(quicksort_list))}")
-# print(f"Quicksort2: {sum(quicksort2_list) / (1000000*len(quicksort2_list))}")
+print(f"Quicksort2: {sum(quicksort2_list) / (1000000*len(quicksort2_list))}")
 # print(f"Mergesort: {sum(mergesort_list) / (1000000*len(mergesort_list))}")
 # print(f"Introsort: {sum(introsort_list) / (1000000*len(introsort_list))}")
 # print(f"Heapsort: {sum(heapsort_list) / (1000000*len(heapsort_list))}")
