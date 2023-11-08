@@ -2,19 +2,19 @@ import random
 import time
 
 
-def quicksort(unsorted_list) -> list:
-    if len(unsorted_list) < 2:
-        return unsorted_list
-    mid = len(unsorted_list) // 2
-    if unsorted_list[0] > unsorted_list[mid]:
-        unsorted_list[0], unsorted_list[mid] = unsorted_list[mid], unsorted_list[0]
-    if unsorted_list[0] > unsorted_list[-1]:
-        unsorted_list[0], unsorted_list[-1] = unsorted_list[-1], unsorted_list[0]
-    if unsorted_list[mid] > unsorted_list[-1]:
-        unsorted_list[mid], unsorted_list[-1] = unsorted_list[-1], unsorted_list[mid]
-    pivot = unsorted_list[mid]
+def quicksort(arr) -> list:
+    if len(arr) < 2:
+        return arr
+    mid = len(arr) // 2
+    if arr[0] > arr[mid]:
+        arr[0], arr[mid] = arr[mid], arr[0]
+    if arr[0] > arr[-1]:
+        arr[0], arr[-1] = arr[-1], arr[0]
+    if arr[mid] > arr[-1]:
+        arr[mid], arr[-1] = arr[-1], arr[mid]
+    pivot = arr[mid]
     less, equal, greater = [], [], []
-    for i in unsorted_list:
+    for i in arr:
         if i < pivot:
             less.append(i)
         elif i == pivot:
@@ -24,64 +24,11 @@ def quicksort(unsorted_list) -> list:
     return quicksort(less) + equal + quicksort(greater)
 
 
-def quicksort2(unsorted_list) -> list:
-    if len(unsorted_list) < 2:
-        return unsorted_list
-    one_third = len(unsorted_list) // 3
-    two_thirds = int(len(unsorted_list) // 1.5)
-    if len(unsorted_list) > 6:
-        (
-            unsorted_list[0],
-            unsorted_list[one_third],
-            unsorted_list[two_thirds],
-            unsorted_list[-1],
-        ) = quicksort2(
-            (
-                unsorted_list[0],
-                unsorted_list[one_third],
-                unsorted_list[two_thirds],
-                unsorted_list[-1],
-            )
-        )
-    elif unsorted_list[one_third] > unsorted_list[two_thirds]:
-        try:
-            unsorted_list[one_third], unsorted_list[two_thirds] = unsorted_list[two_thirds], unsorted_list[one_third]
-    
-        except:
-            print(unsorted_list)
-            print(one_third)
-            print(two_thirds)   
-            exit()
-
-    first = unsorted_list[one_third]
-    second = unsorted_list[two_thirds]
-    less, first_equal, between, second_equal, greater = [], [], [], [], []
-    for i in unsorted_list:
-        if i < first:
-            less.append(i)
-        elif i == first:
-            first_equal.append(i)
-        elif i > first and i < second:
-            between.append(i)
-        elif i == second:
-            second_equal.append(i)
-        else:
-            greater.append(i)
-
-    return (
-        quicksort2(less)
-        + first_equal
-        + quicksort2(between)
-        + second_equal
-        + quicksort2(greater)
-    )
-
-
-def mergesort(unsorted_list) -> list:
-    if len(unsorted_list) < 2:
-        return unsorted_list
-    left = mergesort(unsorted_list[: len(unsorted_list) // 2])
-    right = mergesort(unsorted_list[len(unsorted_list) // 2 :])
+def mergesort(arr) -> list:
+    if len(arr) < 2:
+        return arr
+    left = mergesort(arr[: len(arr) // 2])
+    right = mergesort(arr[len(arr) // 2 :])
     sorted_list = []
     left_index = 0
     right_index = 0
@@ -105,46 +52,81 @@ def mergesort(unsorted_list) -> list:
     return sorted_list
 
 
-def introsort(unsorted_list) -> list:
+# def introsort(arr) -> list:
+#     pass
+
+
+def heapsort(arr):
+    start = len(arr) // 2
+    end = len(arr)
+    while end > 1:
+        if start > 0:
+            start -= 1
+        else:
+            end -= 1
+            arr[end], arr[0] = arr[0], arr[end]
+        root = start
+        while 2 * root + 1 < end:
+            child = 2 * root + 1
+            if child + 1 < end and arr[child] < arr[child + 1]:
+                child += 1
+            if arr[root] < arr[child]:
+                arr[root], arr[child] = arr[child], arr[root]
+                root = child
+            else:
+                break
+    return arr
+
+
+def blocksort(arr):
+    blocks = []
+    for i in range(0, len(arr), 3):
+        block = arr[i : i + 3]
+        blocks.append(sorted(block))
+    result = []
+    while blocks:
+        min_idx = 0
+        for i in range(1, len(blocks)):
+            if blocks[i][0] < blocks[min_idx][0]:
+                min_idx = i
+        result.append(blocks[min_idx].pop(0))
+        if len(blocks[min_idx]) == 0:
+            blocks.pop(min_idx)
+    return result
+
+
+# def timsort(arr) -> list:
+#     pass
+
+
+# def cubesort(arr) -> list:
+#     pass
+
+
+# def treesort(arr) -> list:
+#     pass
+
+
+def librarysort(arr) -> list:
     pass
 
 
-def heapsort(unsorted_list) -> list:
+def patiencesort(arr) -> list:
     pass
 
 
-def blocksort(unsorted_list) -> list:
+def smoothsort(arr) -> list:
     pass
 
 
-def timsort(unsorted_list) -> list:
+def tournamentsort(arr) -> list:
     pass
 
 
-def cubesort(unsorted_list) -> list:
-    pass
-
-
-def treesort(unsorted_list) -> list:
-    pass
-
-
-def librarysort(unsorted_list) -> list:
-    pass
-
-
-def patiencesort(unsorted_list) -> list:
-    pass
-
-
-def smoothsort(unsorted_list) -> list:
-    pass
-
-
-def tournamentsort(unsorted_list) -> list:
-    pass
-
-
+# to_be_sorted = [int(round(random.gauss(0, 100), 0)) for _ in range(15)]
+# print(to_be_sorted)
+# print(quicksort2(to_be_sorted))
+# exit()
 quicksort_list = []
 quicksort2_list = []
 mergesort_list = []
