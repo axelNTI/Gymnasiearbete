@@ -143,15 +143,15 @@ tournesort_list = []
 
 
 for i in range(1000):
-    to_be_sorted = [int(round(random.gauss(0, 100), 0)) for _ in range(10000)]
+    to_be_sorted = [int(round(random.gauss(0, 1), 0)) for _ in range(10000)]
 
     quick_start = time.perf_counter_ns()
     quicksort(to_be_sorted)
     quicksort_list.append(time.perf_counter_ns() - quick_start)
 
-    quick_start2 = time.perf_counter_ns()
-    quicksort2(to_be_sorted)
-    quicksort2_list.append(time.perf_counter_ns() - quick_start2)
+    # quick_start2 = time.perf_counter_ns()
+    # quicksort2(to_be_sorted)
+    # quicksort2_list.append(time.perf_counter_ns() - quick_start2)
 
     # merge_start = time.perf_counter_ns()
     # mergesort(to_be_sorted)
@@ -199,7 +199,7 @@ for i in range(1000):
 
 
 print(f"Quicksort: {sum(quicksort_list) / (1000000*len(quicksort_list))}")
-print(f"Quicksort2: {sum(quicksort2_list) / (1000000*len(quicksort2_list))}")
+# print(f"Quicksort2: {sum(quicksort2_list) / (1000000*len(quicksort2_list))}")
 # print(f"Mergesort: {sum(mergesort_list) / (1000000*len(mergesort_list))}")
 # print(f"Introsort: {sum(introsort_list) / (1000000*len(introsort_list))}")
 # print(f"Heapsort: {sum(heapsort_list) / (1000000*len(heapsort_list))}")
