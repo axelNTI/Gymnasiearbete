@@ -1,6 +1,47 @@
 import random
 import time
 
+#Helper functions:
+
+def merge(left, right) -> list:
+    if len(left) == 0:
+        return right
+    if len(right) == 0:
+        return left
+
+    arr = []
+    index_left = index_right = 0
+    while len(arr) < len(left) + len(right):
+        if left[index_left] <= right[index_right]:
+            arr.append(left[index_left])
+            index_left += 1
+        else:
+            arr.append(right[index_right])
+            index_right += 1
+        if index_right == len(right):
+            arr += left[index_left:]
+            break
+
+        if index_left == len(left):
+            arr += right[index_right:]
+            break
+
+    return arr
+
+
+def insertion_sort(arr, left=0, right=None) -> list:
+    if right is None:
+        right = len(arr) - 1
+    for i in range(left + 1, right + 1):
+        key_item = arr[i]
+        j = i - 1
+        while j >= left and arr[j] > key_item:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key_item
+    return arr
+
+#Algorithms to be compared:
 
 def quicksort(arr) -> list:
     if len(arr) < 2:
@@ -95,8 +136,23 @@ def blocksort(arr):
     return result
 
 
-# def timsort(arr) -> list:
-#     pass
+def timsort(arr) -> list:
+    min_run = 32
+    n = len(arr)
+    for i in range(0, n, min_run):
+        insertion_sort(arr, i, min((i + min_run - 1), n - 1))
+    size = min_run
+    while size < n:
+        for start in range(0, n, size * 2):
+            midpoint = start + size - 1
+            end = min((start + size * 2 - 1), (n - 1))
+            merged_array = merge(
+                left=arr[start : midpoint + 1], right=arr[midpoint + 1 : end + 1]
+            )
+            arr[start : start + len(merged_array)] = merged_array
+        size *= 2
+
+    return arr
 
 
 # def cubesort(arr) -> list:
