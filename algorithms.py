@@ -1,7 +1,9 @@
 import random
 import time
+import math
 
-#Helper functions:
+# Helper functions:
+
 
 def merge(left, right) -> list:
     if len(left) == 0:
@@ -29,7 +31,7 @@ def merge(left, right) -> list:
     return arr
 
 
-def insertion_sort(arr, left=0, right=None) -> list:
+def insertionsort(arr, left=0, right=None) -> list:
     if right is None:
         right = len(arr) - 1
     for i in range(left + 1, right + 1):
@@ -41,7 +43,23 @@ def insertion_sort(arr, left=0, right=None) -> list:
         arr[j + 1] = key_item
     return arr
 
-#Algorithms to be compared:
+
+def binarysearch(arr, x) -> int:
+    low = 0
+    high = len(arr) - 1
+    mid = 0
+    while low <= high:
+        mid = (high + low) // 2
+        if arr[mid] < x:
+            low = mid + 1
+        elif arr[mid] > x:
+            high = mid - 1
+        else:
+            return mid
+
+
+# Algorithms to be compared:
+
 
 def quicksort(arr) -> list:
     if len(arr) < 2:
@@ -93,8 +111,20 @@ def mergesort(arr) -> list:
     return sorted_list
 
 
-# def introsort(arr) -> list:
-#     pass
+def introsort(arr, max_depth=math.log2(len(arr)) * 2) -> list:
+    if len(arr) < 16:
+        return insertionsort(arr)
+    elif max_depth == 0:
+        return heapsort(arr)
+    else:
+        pivot = len(arr) // 2
+        if arr[0] > arr[pivot]:
+            arr[0], arr[pivot] = arr[pivot], arr[0]
+        if arr[0] > arr[-1]:
+            arr[0], arr[-1] = arr[-1], arr[0]
+        if arr[pivot] > arr[-1]:
+            arr[pivot], arr[-1] = arr[-1], arr[pivot]
+        return introsort(arr[1 : pivot - 1], max_depth - 1)
 
 
 def heapsort(arr):
@@ -140,7 +170,7 @@ def timsort(arr) -> list:
     min_run = 32
     n = len(arr)
     for i in range(0, n, min_run):
-        insertion_sort(arr, i, min((i + min_run - 1), n - 1))
+        insertionsort(arr, i, min((i + min_run - 1), n - 1))
     size = min_run
     while size < n:
         for start in range(0, n, size * 2):
@@ -155,27 +185,103 @@ def timsort(arr) -> list:
     return arr
 
 
-# def cubesort(arr) -> list:
-#     pass
-
-
 # def treesort(arr) -> list:
 #     pass
 
 
-def librarysort(arr) -> list:
-    pass
+def patienceSorting(arr):
+    piles = []
+    for i in range(len(arr)):
+        if not piles:
+            temp = []
+            temp.append(arr[i])
+            piles.append(temp)
+        else:
+            flag = True
+            for j in range(len(piles)):
+                if arr[i] < piles[j][-1]:
+                    piles[j].append(arr[i])
+                    flag = False
+                    break
+            if flag:
+                temp = []
+                temp.append(arr[i])
+                piles.append(temp)
+    arr = []
+    while True:
+        minu = float("inf")
+        index = -1
+        for i in range(len(piles)):
+            if minu > piles[i][-1]:
+                minu = piles[i][-1]
+                index = i
+        arr.append(minu)
+        piles[index].pop()
+        if not piles[index]:
+            piles.pop(index)
+        if not piles:
+            break
+    return arr
 
 
-def patiencesort(arr) -> list:
-    pass
+def smoothsort(arr):
+    n = len(arr)
+
+    def leonardo(k):
+        if k < 2:
+            return 1
+        return leonardo(k - 1) + leonardo(k - 2) + 1
+
+    def heapify(start, end):
+        i = start
+        j = 0
+        k = 0
+        while k < end - start + 1:
+            if k & 0xAAAAAAAA:
+                j = j + i
+                i = i >> 1
+            else:
+                i = i + j
+                j = j >> 1
+
+            k = k + 1
+        while i > 0:
+            j = j >> 1
+            k = i + j
+            while k < end:
+                if arr[k] > arr[k - i]:
+                    break
+                arr[k], arr[k - i] = arr[k - i], arr[k]
+                k = k + i
+            i = j
+
+    p = n - 1
+    q = p
+    r = 0
+    while p > 0:
+        if (r & 0x03) == 0:
+            heapify(r, q)
+
+        if leonardo(r) == p:
+            r = r + 1
+        else:
+            r = r - 1
+            q = q - leonardo(r)
+            heapify(r, q)
+            q = r - 1
+            r = r + 1
+
+        arr[0], arr[p] = arr[p], arr[0]
+        p = p - 1
+    for i in range(n - 1):
+        j = i + 1
+        while j > 0 and arr[j] < arr[j - 1]:
+            arr[j], arr[j - 1] = arr[j - 1], arr[j]
+            j = j - 1
+    return arr
 
 
-def smoothsort(arr) -> list:
-    pass
-
-
-def tournamentsort(arr) -> list:
+def tournamentsort(arr):
     pass
 
 
