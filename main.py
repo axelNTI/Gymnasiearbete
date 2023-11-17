@@ -5,7 +5,7 @@ from algorithms import *
 
 random.seed(os.urandom(255))
 
-iterations = 1000
+iterations = 100000
 size = 1000
 deviation = size / 100
 quicksort_list = []
