@@ -3,61 +3,6 @@ import math
 # Helper functions:
 
 
-def merge(left, right):
-    if len(left) == 0:
-        return right
-    if len(right) == 0:
-        return left
-
-    arr = []
-    index_left = index_right = 0
-    while len(arr) < len(left) + len(right):
-        if left[index_left] <= right[index_right]:
-            arr.append(left[index_left])
-            index_left += 1
-        else:
-            arr.append(right[index_right])
-            index_right += 1
-        if index_right == len(right):
-            arr += left[index_left:]
-            break
-
-        if index_left == len(left):
-            arr += right[index_right:]
-            break
-
-    return arr
-
-
-def insertionsort(arr, left=0, right=None):
-    if right is None:
-        right = len(arr) - 1
-    for i in range(left + 1, right + 1):
-        key_item = arr[i]
-        j = i - 1
-        while j >= left and arr[j] > key_item:
-            arr[j + 1] = arr[j]
-            j -= 1
-        arr[j + 1] = key_item
-    return arr
-
-
-def introsorting(arr: list, max_depth):
-    if len(arr) < 16:
-        return insertionsort(arr)
-    elif max_depth == 0:
-        return heapsort(arr)
-    else:
-        pivot = len(arr) // 2
-        if arr[0] > arr[pivot]:
-            arr[0], arr[pivot] = arr[pivot], arr[0]
-        if arr[0] > arr[-1]:
-            arr[0], arr[-1] = arr[-1], arr[0]
-        if arr[pivot] > arr[-1]:
-            arr[pivot], arr[-1] = arr[-1], arr[pivot]
-        return introsorting(arr[1 : pivot - 1], max_depth - 1)
-
-
 # Algorithms to be compared:
 
 
@@ -112,6 +57,33 @@ def mergesort(arr: list) -> list:
 
 
 def introsort(arr: list) -> list:
+    def introsorting(arr: list, max_depth):
+        def insertionsort(arr, left=0, right=None):
+            if right is None:
+                right = len(arr) - 1
+            for i in range(left + 1, right + 1):
+                key_item = arr[i]
+                j = i - 1
+                while j >= left and arr[j] > key_item:
+                    arr[j + 1] = arr[j]
+                    j -= 1
+                arr[j + 1] = key_item
+            return arr
+
+        if len(arr) < 16:
+            return insertionsort(arr)
+        elif max_depth == 0:
+            return heapsort(arr)
+        else:
+            pivot = len(arr) // 2
+            if arr[0] > arr[pivot]:
+                arr[0], arr[pivot] = arr[pivot], arr[0]
+            if arr[0] > arr[-1]:
+                arr[0], arr[-1] = arr[-1], arr[0]
+            if arr[pivot] > arr[-1]:
+                arr[pivot], arr[-1] = arr[-1], arr[pivot]
+            return introsorting(arr[1 : pivot - 1], max_depth - 1)
+
     max_depth = math.log2(len(arr)) * 2
     return introsorting(arr, max_depth)
 
@@ -156,6 +128,43 @@ def blocksort(arr: list) -> list:
 
 
 def timsort(arr: list) -> list:
+    def merge(left, right):
+        if len(left) == 0:
+            return right
+        if len(right) == 0:
+            return left
+
+        arr = []
+        index_left = index_right = 0
+        while len(arr) < len(left) + len(right):
+            if left[index_left] <= right[index_right]:
+                arr.append(left[index_left])
+                index_left += 1
+            else:
+                arr.append(right[index_right])
+                index_right += 1
+            if index_right == len(right):
+                arr += left[index_left:]
+                break
+
+            if index_left == len(left):
+                arr += right[index_right:]
+                break
+
+        return arr
+
+    def insertionsort(arr, left=0, right=None):
+        if right is None:
+            right = len(arr) - 1
+        for i in range(left + 1, right + 1):
+            key_item = arr[i]
+            j = i - 1
+            while j >= left and arr[j] > key_item:
+                arr[j + 1] = arr[j]
+                j -= 1
+            arr[j + 1] = key_item
+        return arr
+
     min_run = 32
     n = len(arr)
     for i in range(0, n, min_run):
@@ -176,29 +185,29 @@ def timsort(arr: list) -> list:
 
 def patiencesort(arr: list) -> list:
     piles = []
-    for i in range(len(arr)):
+    for i in arr:
         if not piles:
             temp = []
-            temp.append(arr[i])
+            temp.append(i)
             piles.append(temp)
         else:
             flag = True
-            for j in range(len(piles)):
-                if arr[i] < piles[j][-1]:
-                    piles[j].append(arr[i])
+            for j in piles:
+                if i < j[-1]:
+                    j.append(i)
                     flag = False
                     break
             if flag:
                 temp = []
-                temp.append(arr[i])
+                temp.append(i)
                 piles.append(temp)
     arr = []
     while True:
         minu = float("inf")
         index = -1
-        for i in range(len(piles)):
-            if minu > piles[i][-1]:
-                minu = piles[i][-1]
+        for i, j in enumerate(piles):
+            if minu > j[-1]:
+                minu = j[-1]
                 index = i
         arr.append(minu)
         piles[index].pop()
@@ -264,32 +273,3 @@ def smoothsort(arr: list) -> list:
             arr[j], arr[j - 1] = arr[j - 1], arr[j]
             j = j - 1
     return arr
-
-
-def tournamentsort(arr):
-    n = len(arr)
-
-    # Build the tournament tree
-    tree = [0] * (2 * n)
-    for i in range(n):
-        tree[n + i] = i
-
-    for i in range(n - 1, 0, -1):
-        tree[i] = max(tree[2 * i], tree[2 * i + 1], key=lambda x: arr[x])
-
-    # Perform the sort using the tournament tree
-    sorted_arr = []
-    while len(sorted_arr) < n:
-        winner = tree[1]
-        sorted_arr.append(arr[winner])
-
-        # Update the tree with the removed winner
-        tree[n + winner] = float("-inf")  # Mark the winner as removed
-        winner //= 2  # Move up the tree
-        while winner > 0:
-            tree[winner] = max(
-                tree[2 * winner], tree[2 * winner + 1], key=lambda x: arr[x]
-            )
-            winner //= 2
-
-    return sorted_arr

@@ -5,7 +5,7 @@ from algorithms import *
 
 random.seed(os.urandom(255))
 
-iterations = 100000
+iterations = 1000
 size = 1000
 deviation = size / 100
 quicksort_list = []
@@ -16,7 +16,6 @@ blocksort_list = []
 timsort_list = []
 patiencesort_list = []
 smoothsort_list = []
-tournamentsort_list = []
 
 for i in range(iterations):
     print(i)
@@ -54,18 +53,13 @@ for i in range(iterations):
     smoothsort(to_be_sorted)
     smoothsort_list.append(time.perf_counter_ns() - smooth_start)
 
-    tournament_start = time.perf_counter_ns()
-    tournamentsort(to_be_sorted)
-    tournamentsort_list.append(time.perf_counter_ns() - tournament_start)
 
 print(f"Quicksort: { sum(quicksort_list) / (1000000*iterations)} ms")
 print(f"Mergesort: { sum(mergesort_list) / (1000000*iterations)} ms")
 print(f"Introsort: { sum(introsort_list) / (1000000*iterations)} ms")
-
 print(f"Heapsort: { sum(heapsort_list) / (1000000*iterations)} ms")
+
 print(f"Blocksort: { sum(blocksort_list) / (1000000*iterations)} ms")
 print(f"Timsort: { sum(timsort_list) / (1000000*iterations)} ms")
-
 print(f"Patiencesort: { sum(patiencesort_list) / (1000000*iterations)} ms")
 print(f"Smoothsort: { sum(smoothsort_list) / (1000000*iterations)} ms")
-print(f"Tournamentsort: { sum(tournamentsort_list) / (1000000*iterations)} ms")
