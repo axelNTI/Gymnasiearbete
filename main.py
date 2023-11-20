@@ -3,63 +3,69 @@ import time
 import os
 from algorithms import *
 
+# results = {
+#     "Quicksort": {"1000", "10000", "100000"},
+#     "Mergesort": {},
+#     "Introsort": {},
+#     "Heapsort": {},
+#     "Timsort": {},
+# }
+
+
+class Result:
+    def __init__(self, time_ns, algorithm, size, deviation) -> None:
+        self.time_ns = time_ns
+        self.algorithm = algorithm
+        self.size = size
+        self.deviation = deviation
+
+
 random.seed(os.urandom(255))
+sizes = (1000, 10000, 100000)
+deviations = (0.1, 0.01, 0.001)
+iterations = 25000
+results_list = []
+for iteration in range(iterations):
+    for size in sizes:
+        for deviation in deviations:
+            print(iteration, size, deviation)
+            to_be_sorted = [
+                int(round(random.gauss(0, deviation * size), 0)) for _ in range(size)
+            ]
 
-iterations = 1000
-size = 1000
-deviation = size / 100
-quicksort_list = []
-mergesort_list = []
-introsort_list = []
-heapsort_list = []
-blocksort_list = []
-timsort_list = []
-patiencesort_list = []
-smoothsort_list = []
+            quick_start = time.perf_counter_ns()
+            quicksort(to_be_sorted.copy())
+            quick_end = time.perf_counter_ns()
+            results_list.append(
+                Result(quick_end - quick_start, "Quicksort", size, deviation)
+            )
 
-for i in range(iterations):
-    print(i)
-    to_be_sorted = [int(round(random.gauss(0, deviation), 0)) for _ in range(size)]
+            merge_start = time.perf_counter_ns()
+            mergesort(to_be_sorted.copy())
+            merge_end = time.perf_counter_ns()
+            results_list.append(
+                Result(merge_end - merge_start, "Mergesort", size, deviation)
+            )
 
-    quick_start = time.perf_counter_ns()
-    quicksort(to_be_sorted)
-    quicksort_list.append(time.perf_counter_ns() - quick_start)
+            intro_start = time.perf_counter_ns()
+            introsort(to_be_sorted.copy())
+            intro_end = time.perf_counter_ns()
+            results_list.append(
+                Result(intro_end - intro_start, "Introsort", size, deviation)
+            )
 
-    merge_start = time.perf_counter_ns()
-    mergesort(to_be_sorted)
-    mergesort_list.append(time.perf_counter_ns() - merge_start)
+            heap_start = time.perf_counter_ns()
+            heapsort(to_be_sorted.copy())
+            heap_end = time.perf_counter_ns()
+            results_list.append(
+                Result(heap_end - heap_start, "Heapsort", size, deviation)
+            )
 
-    intro_start = time.perf_counter_ns()
-    introsort(to_be_sorted)
-    introsort_list.append(time.perf_counter_ns() - intro_start)
-
-    heap_start = time.perf_counter_ns()
-    heapsort(to_be_sorted)
-    heapsort_list.append(time.perf_counter_ns() - heap_start)
-
-    block_start = time.perf_counter_ns()
-    blocksort(to_be_sorted)
-    blocksort_list.append(time.perf_counter_ns() - block_start)
-
-    tim_start = time.perf_counter_ns()
-    timsort(to_be_sorted)
-    timsort_list.append(time.perf_counter_ns() - tim_start)
-
-    patience_start = time.perf_counter_ns()
-    patiencesort(to_be_sorted)
-    patiencesort_list.append(time.perf_counter_ns() - patience_start)
-
-    smooth_start = time.perf_counter_ns()
-    smoothsort(to_be_sorted)
-    smoothsort_list.append(time.perf_counter_ns() - smooth_start)
+            tim_start = time.perf_counter_ns()
+            timsort(to_be_sorted.copy())
+            tim_end = time.perf_counter_ns()
+            results_list.append(Result(tim_end - tim_start, "Timsort", size, deviation))
 
 
-print(f"Quicksort: { sum(quicksort_list) / (1000000*iterations)} ms")
-print(f"Mergesort: { sum(mergesort_list) / (1000000*iterations)} ms")
-print(f"Introsort: { sum(introsort_list) / (1000000*iterations)} ms")
-print(f"Heapsort: { sum(heapsort_list) / (1000000*iterations)} ms")
-
-print(f"Blocksort: { sum(blocksort_list) / (1000000*iterations)} ms")
-print(f"Timsort: { sum(timsort_list) / (1000000*iterations)} ms")
-print(f"Patiencesort: { sum(patiencesort_list) / (1000000*iterations)} ms")
-print(f"Smoothsort: { sum(smoothsort_list) / (1000000*iterations)} ms")
+with open("data_storage.txt", "a") as file:
+    file.write(str(results_list))

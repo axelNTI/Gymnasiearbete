@@ -58,20 +58,16 @@ def mergesort(arr: list) -> list:
 
 def introsort(arr: list) -> list:
     def introsorting(arr: list, max_depth):
-        def insertionsort(arr, left=0, right=None):
-            if right is None:
-                right = len(arr) - 1
-            for i in range(left + 1, right + 1):
+        if len(arr) < 16:
+            right = len(arr) - 1
+            for i in range(1, right + 1):
                 key_item = arr[i]
                 j = i - 1
-                while j >= left and arr[j] > key_item:
+                while j >= 0 and arr[j] > key_item:
                     arr[j + 1] = arr[j]
                     j -= 1
                 arr[j + 1] = key_item
             return arr
-
-        if len(arr) < 16:
-            return insertionsort(arr)
         elif max_depth == 0:
             return heapsort(arr)
         else:
@@ -85,10 +81,11 @@ def introsort(arr: list) -> list:
             return introsorting(arr[1 : pivot - 1], max_depth - 1)
 
     max_depth = math.log2(len(arr)) * 2
-    return introsorting(arr, max_depth)
+    return introsorting(arr.copy(), max_depth)
 
 
 def heapsort(arr: list) -> list:
+    arr = arr.copy()
     start = len(arr) // 2
     end = len(arr)
     while end > 1:
@@ -108,23 +105,6 @@ def heapsort(arr: list) -> list:
             else:
                 break
     return arr
-
-
-def blocksort(arr: list) -> list:
-    blocks = []
-    for i in range(0, len(arr), 3):
-        block = arr[i : i + 3]
-        blocks.append(sorted(block))
-    result = []
-    while blocks:
-        min_idx = 0
-        for i in range(1, len(blocks)):
-            if blocks[i][0] < blocks[min_idx][0]:
-                min_idx = i
-        result.append(blocks[min_idx].pop(0))
-        if len(blocks[min_idx]) == 0:
-            blocks.pop(min_idx)
-    return result
 
 
 def timsort(arr: list) -> list:
@@ -180,96 +160,4 @@ def timsort(arr: list) -> list:
             arr[start : start + len(merged_array)] = merged_array
         size *= 2
 
-    return arr
-
-
-def patiencesort(arr: list) -> list:
-    piles = []
-    for i in arr:
-        if not piles:
-            temp = []
-            temp.append(i)
-            piles.append(temp)
-        else:
-            flag = True
-            for j in piles:
-                if i < j[-1]:
-                    j.append(i)
-                    flag = False
-                    break
-            if flag:
-                temp = []
-                temp.append(i)
-                piles.append(temp)
-    arr = []
-    while True:
-        minu = float("inf")
-        index = -1
-        for i, j in enumerate(piles):
-            if minu > j[-1]:
-                minu = j[-1]
-                index = i
-        arr.append(minu)
-        piles[index].pop()
-        if not piles[index]:
-            piles.pop(index)
-        if not piles:
-            break
-    return arr
-
-
-def smoothsort(arr: list) -> list:
-    n = len(arr)
-
-    def leonardo(k):
-        if k < 2:
-            return 1
-        return leonardo(k - 1) + leonardo(k - 2) + 1
-
-    def heapify(start, end):
-        i = start
-        j = 0
-        k = 0
-        while k < end - start + 1:
-            if k & 0xAAAAAAAA:
-                j = j + i
-                i = i >> 1
-            else:
-                i = i + j
-                j = j >> 1
-
-            k = k + 1
-        while i > 0:
-            j = j >> 1
-            k = i + j
-            while k < end:
-                if arr[k] > arr[k - i]:
-                    break
-                arr[k], arr[k - i] = arr[k - i], arr[k]
-                k = k + i
-            i = j
-
-    p = n - 1
-    q = p
-    r = 0
-    while p > 0:
-        if (r & 0x03) == 0:
-            heapify(r, q)
-
-        if leonardo(r) == p:
-            r = r + 1
-        else:
-            r = r - 1
-            q = q - leonardo(r)
-            heapify(r, q)
-            q = r - 1
-            r = r + 1
-
-        arr[0], arr[p] = arr[p], arr[0]
-        p = p - 1
-    for i in range(n - 1):
-        j = i + 1
-        while j > 0 and arr[j] < arr[j - 1]:
-            arr[j], arr[j - 1] = arr[j - 1], arr[j]
-            j = j - 1
     return arr
