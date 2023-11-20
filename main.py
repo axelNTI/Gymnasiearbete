@@ -1,15 +1,8 @@
 import random
+import pickle
 import time
 import os
 from algorithms import *
-
-# results = {
-#     "Quicksort": {"1000", "10000", "100000"},
-#     "Mergesort": {},
-#     "Introsort": {},
-#     "Heapsort": {},
-#     "Timsort": {},
-# }
 
 
 class Result:
@@ -67,5 +60,5 @@ for iteration in range(iterations):
             results_list.append(Result(tim_end - tim_start, "Timsort", size, deviation))
 
 
-with open("data_storage.txt", "a") as file:
-    file.write(str(results_list))
+with open("data.pkl", "wb") as file:
+    pickle.dump(results_list, file)

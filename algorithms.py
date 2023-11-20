@@ -1,8 +1,5 @@
 import math
 
-# Helper functions:
-
-
 # Algorithms to be compared:
 
 
