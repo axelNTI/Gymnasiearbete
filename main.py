@@ -19,9 +19,9 @@ deviations = (0.1, 0.01, 0.001)
 iterations = 25000
 results_list = []
 for iteration in range(iterations):
+    print(iteration)
     for size in sizes:
         for deviation in deviations:
-            print(iteration, size, deviation)
             to_be_sorted = [
                 int(round(random.gauss(0, deviation * size), 0)) for _ in range(size)
             ]
@@ -38,13 +38,6 @@ for iteration in range(iterations):
             merge_end = time.perf_counter_ns()
             results_list.append(
                 Result(merge_end - merge_start, "Mergesort", size, deviation)
-            )
-
-            intro_start = time.perf_counter_ns()
-            introsort(to_be_sorted.copy())
-            intro_end = time.perf_counter_ns()
-            results_list.append(
-                Result(intro_end - intro_start, "Introsort", size, deviation)
             )
 
             heap_start = time.perf_counter_ns()
