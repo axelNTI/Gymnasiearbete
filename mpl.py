@@ -39,4 +39,19 @@ list_of_lists = {
 categories = [f"{i}_{j}" for i in sizes for j in deviations]
 for i in categories:
     list_of_lists[i] = dict(sorted(list_of_lists[i].items(), key=lambda x: x[1]))
+    print(i)
     print(list_of_lists[i])
+quicksort = []
+mergesort = []
+heapsort = []
+timsort = []
+for i in list_of_lists:
+    quicksort.append(list_of_lists[i]["Quicksort"])
+    mergesort.append(list_of_lists[i]["Mergesort"])
+    heapsort.append(list_of_lists[i]["Heapsort"])
+    timsort.append(list_of_lists[i]["Timsort"])
+
+print(average(quicksort))
+print(average(mergesort))
+print(average(heapsort))
+print(average(timsort))
