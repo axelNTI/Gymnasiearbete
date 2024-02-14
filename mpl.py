@@ -1,6 +1,5 @@
 import pickle
-
-# import matplotlib
+import plotly.express as px
 
 
 class Result:
@@ -19,40 +18,25 @@ def average(arr: list) -> float:
     return sum(arr) / len(arr)
 
 
-import matplotlib.pyplot as plt
-
-
-def plot_list_as_graph(data):
-    # Initialize empty dictionaries to store counts
+def plot_list_as_graph(data, name, size, deviation):
     count_dict = {}
-
-    # Count frequency of each element in the list
     for item in data:
         count_dict[item] = count_dict.get(item, 0) + 1
-
-    # Extract x and y values from the dictionaries
     x_values = list(count_dict.keys())
     y_values = list(count_dict.values())
-
-    # Plot the graph
-    plt.bar(x_values, y_values)
-
-    # Labeling the axes
-    plt.xlabel("Value")
-    plt.ylabel("Frequency")
-
-    # Adding title to the plot
-    plt.title("Frequency of Values in List")
-    print(count_dict)
-
-    # Show the plot
-    plt.show()
+    fig = px.bar(
+        x=x_values,
+        y=y_values,
+        labels={"x": "Time (ms)", "y": "Amount"},
+        title=f"Amount of times in algorithm: {name}. Size: {size}. Standard deviation: {size*deviation}.",
+    )
+    fig.show()
 
 
 algorithms = ("Quicksort", "Mergesort", "Heapsort", "Timsort")
 sizes = (1000, 10000, 100000)
 deviations = (0.1, 0.01, 0.001)
-list_of_lists = {
+list_of_averages = {
     f"{i}_{j}": {
         k: average(
             [
@@ -66,7 +50,7 @@ list_of_lists = {
     for i in sizes
     for j in deviations
 }
-list_of_lists2 = {
+list_of_values = {
     f"{i}_{j}": {
         k: [
             round(l.time_ns * 1e-6, 2)
@@ -80,22 +64,30 @@ list_of_lists2 = {
 }
 categories = [f"{i}_{j}" for i in sizes for j in deviations]
 for i in categories:
-    list_of_lists[i] = dict(sorted(list_of_lists[i].items(), key=lambda x: x[1]))
+    list_of_averages[i] = dict(sorted(list_of_averages[i].items(), key=lambda x: x[1]))
     print(i)
-    print(list_of_lists[i])
-quicksort = []
-mergesort = []
-heapsort = []
-timsort = []
-for i in list_of_lists:
-    quicksort.append(list_of_lists[i]["Quicksort"])
-    mergesort.append(list_of_lists[i]["Mergesort"])
-    heapsort.append(list_of_lists[i]["Heapsort"])
-    timsort.append(list_of_lists[i]["Timsort"])
-list_of_lists2["1000_0.1"]["Quicksort"].sort()
-print(average(quicksort))
-print(average(mergesort))
-print(average(heapsort))
-print(average(timsort))
-# print(list_of_lists2["10000_0.1"]["Quicksort"])
-plot_list_as_graph(list_of_lists2["1000_0.1"]["Quicksort"])
+    print(list_of_averages[i])
+quicksort_times = []
+mergesort_times = []
+heapsort_times = []
+timsort_times = []
+for i in list_of_averages:
+    quicksort_times.append(list_of_averages[i]["Quicksort"])
+    mergesort_times.append(list_of_averages[i]["Mergesort"])
+    heapsort_times.append(list_of_averages[i]["Heapsort"])
+    timsort_times.append(list_of_averages[i]["Timsort"])
+print(average(quicksort_times))
+print(average(mergesort_times))
+print(average(heapsort_times))
+print(average(timsort_times))
+[
+    plot_list_as_graph(
+        list_of_values[f"{size}_{deviation}"][algorithm],
+        algorithm,
+        size,
+        deviation,
+    )
+    for algorithm in algorithms
+    for size in sizes
+    for deviation in deviations
+]
